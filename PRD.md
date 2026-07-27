@@ -210,7 +210,7 @@ checkbox correspondente para sabermos em que parte do fluxo estamos.
 
 - [X] Sprint 0 — Setup do projeto
 - [X] Sprint 1 — Aquisição de dados
-- [ ] Sprint 2 — Motor de identificação e preenchimento de campos
+- [X] Sprint 2 — Motor de identificação e preenchimento de campos
 - [ ] Sprint 3 — Orquestração do loop completo
 - [ ] Sprint 4 — Logging e tratamento de falhas
 - [ ] Sprint 5 — Artefatos e relatório de resultado
@@ -240,7 +240,7 @@ ambos os modos.
 **DoD:** dado um teste local, os 10 registros são extraídos corretamente com todas as colunas
 esperadas, validado por teste unitário com uma planilha de exemplo.
 
-### Sprint 2 — Motor de identificação e preenchimento de campos (1 dia) — [ ] Concluída
+### Sprint 2 — Motor de identificação e preenchimento de campos (1 dia) — [X] Concluída
 **Objetivo:** implementar o Page Object com seletores estáveis e ação de preenchimento por round.
 - Inspecionar o DOM do desafio e mapear atributo estável de cada campo → coluna da planilha.
 - Implementar `challenge_page.py`: `start()`, `fill_record(record)`, `submit()`.
