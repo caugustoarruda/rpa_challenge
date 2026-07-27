@@ -211,7 +211,7 @@ checkbox correspondente para sabermos em que parte do fluxo estamos.
 - [X] Sprint 0 — Setup do projeto
 - [X] Sprint 1 — Aquisição de dados
 - [X] Sprint 2 — Motor de identificação e preenchimento de campos
-- [ ] Sprint 3 — Orquestração do loop completo
+- [X] Sprint 3 — Orquestração do loop completo
 - [ ] Sprint 4 — Logging e tratamento de falhas
 - [ ] Sprint 5 — Artefatos e relatório de resultado
 - [ ] Sprint 6 — Testes, headless/non-headless e validação de robustez
@@ -250,12 +250,12 @@ esperadas, validado por teste unitário com uma planilha de exemplo.
 **DoD:** rodando 1 round manualmente (non-headless), todos os campos são preenchidos corretamente
 mesmo alternando a ordem visual entre execuções.
 
-### Sprint 3 — Orquestração do loop completo (0,5 dia) — [ ] Concluída
+### Sprint 3 — Orquestração do loop completo (0,5 dia) — [X] Concluída
 **Objetivo:** encadear os 10 rounds até a conclusão do desafio.
-- `runner.py`: loop sobre os 10 registros chamando `fill_record` + `submit`.
-- Tratamento de `StaleElementReferenceException` / re-tentativa controlada por round.
-- Medição de tempo total de execução.
-- Captura da tela/mensagem final de sucesso do site.
+- [X] `runner.py`: loop sobre os 10 registros chamando `fill_record` + `submit`.
+- [X] Tratamento de `StaleElementReferenceException` / re-tentativa controlada por round.
+- [X] Medição de tempo total de execução.
+- [X] Captura da tela/mensagem final de sucesso do site.
 
 **DoD:** execução ponta a ponta (download → preenchimento → submissão dos 10 registros) termina com
 a mensagem de sucesso do site, sem intervenção manual.

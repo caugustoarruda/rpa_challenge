@@ -97,6 +97,18 @@ assert set(FIELD_SELECTORS) == set(EXPECTED_COLUMNS), (
 START_BUTTON_XPATH = "//button[normalize-space(.)='Start']"
 SUBMIT_BUTTON_CSS = "input[type='submit']"
 
+# Selector do popup/modal de conclusão exibido após o `submit()` do último
+# round. Diferente dos campos do formulário, esse popup não expõe um
+# atributo estável dedicado (ex. `ng-reflect-name`); por isso o critério
+# aqui é textual: localiza o elemento mais interno (sem descendentes que
+# repitam o mesmo texto) cujo conteúdo contenha "Congratulations" — a
+# mensagem de sucesso do site. Essa estratégia é mais resiliente a mudanças
+# de classe/estrutura do que fixar um seletor CSS específico do modal.
+COMPLETION_MESSAGE_XPATH = (
+    "//*[contains(normalize-space(.), 'Congratulations') "
+    "and not(.//*[contains(normalize-space(.), 'Congratulations')])]"
+)
+
 DEFAULT_TIMEOUT = 10
 
 
@@ -168,6 +180,33 @@ class ChallengePage:
         wait = WebDriverWait(self.driver, self.timeout)
         submit_button = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, SUBMIT_BUTTON_CSS)))
         submit_button.click()
+
+    def wait_for_completion_message(self, timeout: int | None = None) -> str:
+        """Aguarda o popup de conclusão do desafio e retorna seu texto.
+
+        Deve ser chamado depois do `submit()` do último round (RF08): usa
+        espera explícita (nunca `time.sleep()` fixo) até o elemento de
+        conclusão ficar visível, e devolve seu texto — que no site inclui a
+        mensagem de sucesso e o tempo total reportado pelo próprio
+        rpachallenge.com.
+
+        Args:
+            timeout: timeout (segundos) específico para esta espera; usa
+                `self.timeout` se omitido. O popup pode levar um instante a
+                mais para renderizar do que o re-render normal entre rounds.
+
+        Returns:
+            Texto do elemento de conclusão, sem espaços nas extremidades.
+
+        Raises:
+            TimeoutException: se o popup de conclusão não aparecer dentro do
+                tempo limite.
+        """
+        wait = WebDriverWait(self.driver, timeout or self.timeout)
+        completion_element = wait.until(
+            EC.visibility_of_element_located((By.XPATH, COMPLETION_MESSAGE_XPATH))
+        )
+        return completion_element.text.strip()
 
     def _locate_input(self, column: str) -> WebElement:
         """Localiza o `<input>` de `column` pelo seletor primário, com fallback.
