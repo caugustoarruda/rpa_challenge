@@ -208,7 +208,7 @@ checkbox correspondente para sabermos em que parte do fluxo estamos.
 
 ### Progresso geral
 
-- [ ] Sprint 0 — Setup do projeto
+- [X] Sprint 0 — Setup do projeto
 - [ ] Sprint 1 — Aquisição de dados
 - [ ] Sprint 2 — Motor de identificação e preenchimento de campos
 - [ ] Sprint 3 — Orquestração do loop completo
@@ -217,15 +217,15 @@ checkbox correspondente para sabermos em que parte do fluxo estamos.
 - [ ] Sprint 6 — Testes, headless/non-headless e validação de robustez
 - [ ] Sprint 7 — Documentação e entrega
 
-### Sprint 0 — Setup do projeto (0,5 dia) — [ ] Concluída
+### Sprint 0 — Setup do projeto (0,5 dia) — [X] Concluída
 **Objetivo:** base do repositório pronta para desenvolvimento.
-- Estrutura de pastas (`src/`, `tests/`, `artifacts/`).
-- `requirements.txt` (selenium, pandas, openpyxl, pytest).
-- `README.md` inicial com instruções de instalação/execução.
-- `.gitignore` (artifacts/, __pycache__, venv, downloads locais, planilha baixada) — garante que
+- [X] Estrutura de pastas (`src/`, `tests/`, `artifacts/`).
+- [X] `requirements.txt` (selenium, pandas, openpyxl, pytest).
+- [X] `README.md` inicial com instruções de instalação/execução.
+- [X] `.gitignore` (artifacts/, __pycache__, venv, downloads locais, planilha baixada) — garante que
   nenhum artefato de execução, dado grande ou eventual arquivo local sensível seja versionado (o
   desafio não usa credenciais/tokens, apenas dados públicos).
-- Configuração de `driver_factory.py` com suporte a `--headless`.
+- [X] Configuração de `driver_factory.py` com suporte a `--headless`.
 
 **DoD:** `python -m src.cli --help` roda em máquina limpa; navegador abre e fecha corretamente em
 ambos os modos.

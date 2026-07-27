@@ -8,10 +8,13 @@ rodada) e gera evidências da execução (screenshot, JSON de resultado e log).
 
 ## Status atual do projeto
 
-🚧 **Em desenvolvimento — Sprint 0 (setup) em andamento.** Este README documenta a interface e o
-comportamento **planejados** conforme o PRD; a estrutura de código (`src/`), `requirements.txt` e
-testes ainda serão implementados nas próximas sprints. Este documento será atualizado a cada sprint
-concluída para refletir o estado real do repositório.
+🚧 **Em desenvolvimento — Sprint 0 (setup) concluída, Sprint 1 (aquisição de dados) a seguir.**
+A estrutura do repositório (`src/`, `tests/`, `artifacts/`), `requirements.txt`, `.gitignore` e o
+esqueleto de `driver_factory.py`/`cli.py` já existem e foram validados (`python -m src.cli --help`
+e abertura/fechamento do navegador em modo headless e non-headless). Os demais módulos (`data_loader`,
+`challenge_page`, `runner`, `reporting`, `logging_config`) ainda são stubs — a lógica de negócio será
+implementada nas próximas sprints. Este documento será atualizado a cada sprint concluída para
+refletir o estado real do repositório.
 
 Acompanhe o progresso em [`PRD.md` § 11 — Roadmap de Sprints](./PRD.md#11-roadmap-de-sprints).
 
