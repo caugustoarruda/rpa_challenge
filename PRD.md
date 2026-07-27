@@ -209,7 +209,7 @@ checkbox correspondente para sabermos em que parte do fluxo estamos.
 ### Progresso geral
 
 - [X] Sprint 0 — Setup do projeto
-- [ ] Sprint 1 — Aquisição de dados
+- [X] Sprint 1 — Aquisição de dados
 - [ ] Sprint 2 — Motor de identificação e preenchimento de campos
 - [ ] Sprint 3 — Orquestração do loop completo
 - [ ] Sprint 4 — Logging e tratamento de falhas
@@ -230,12 +230,12 @@ checkbox correspondente para sabermos em que parte do fluxo estamos.
 **DoD:** `python -m src.cli --help` roda em máquina limpa; navegador abre e fecha corretamente em
 ambos os modos.
 
-### Sprint 1 — Aquisição de dados (0,5 dia) — [ ] Concluída
+### Sprint 1 — Aquisição de dados (0,5 dia) — [X] Concluída
 **Objetivo:** obter e parsear a planilha do desafio de forma automatizada.
-- Navegar até o site e localizar/clicar no botão de download.
-- Configurar diretório de download do Chrome via preferences do driver.
-- Aguardar (com wait, não sleep) a conclusão do download.
-- `data_loader.py`: parsing do `.xlsx` para lista de dicts/objetos por registro.
+- [X] Navegar até o site e localizar/clicar no botão de download.
+- [X] Configurar diretório de download do Chrome via preferences do driver.
+- [X] Aguardar (com wait, não sleep) a conclusão do download.
+- [X] `data_loader.py`: parsing do `.xlsx` para lista de dicts/objetos por registro.
 
 **DoD:** dado um teste local, os 10 registros são extraídos corretamente com todas as colunas
 esperadas, validado por teste unitário com uma planilha de exemplo.
