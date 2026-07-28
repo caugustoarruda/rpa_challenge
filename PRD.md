@@ -213,7 +213,7 @@ checkbox correspondente para sabermos em que parte do fluxo estamos.
 - [X] Sprint 2 — Motor de identificação e preenchimento de campos
 - [X] Sprint 3 — Orquestração do loop completo
 - [X] Sprint 4 — Logging e tratamento de falhas
-- [ ] Sprint 5 — Artefatos e relatório de resultado
+- [X] Sprint 5 — Artefatos e relatório de resultado
 - [ ] Sprint 6 — Testes, headless/non-headless e validação de robustez
 - [ ] Sprint 7 — Documentação e entrega
 
@@ -272,11 +272,11 @@ a mensagem de sucesso do site, sem intervenção manual.
 **DoD:** ao forçar um erro (ex. seletor inválido temporário), o log aponta claramente a causa e o
 processo termina com status de falha, sem travar silenciosamente.
 
-### Sprint 5 — Artefatos e relatório de resultado (0,5 dia) — [ ] Concluída
+### Sprint 5 — Artefatos e relatório de resultado (0,5 dia) — [X] Concluída
 **Objetivo:** gerar as evidências exigidas pelo desafio.
-- `reporting.py`: cálculo de acurácia, captura de screenshot final, geração de `result.json`.
-- Extração do tempo reportado pelo próprio site (se exposto na tela de sucesso).
-- Nomeação/organização consistente dos artefatos (timestamp opcional para não sobrescrever execuções
+- [X] `reporting.py`: cálculo de acurácia, captura de screenshot final, geração de `result.json`.
+- [X] Extração do tempo reportado pelo próprio site (se exposto na tela de sucesso).
+- [X] Nomeação/organização consistente dos artefatos (timestamp opcional para não sobrescrever execuções
   anteriores, se desejado).
 
 **DoD:** após uma execução, `artifacts/` contém `result.json` válido, `final_screenshot.png` e
