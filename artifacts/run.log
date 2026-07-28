@@ -1,0 +1,27 @@
+2026-07-28 10:21:44,500 [INFO] __main__: Iniciando execução do RPA Challenge (headless=True, output_dir=artifacts/, timeout=30s).
+2026-07-28 10:21:44,896 [INFO] src.runner: Iniciando execução completa (download -> parsing -> preenchimento).
+2026-07-28 10:21:44,896 [INFO] src.data_loader: Iniciando download da planilha do desafio em https://rpachallenge.com/.
+2026-07-28 10:21:47,568 [INFO] src.data_loader: Download da planilha concluído: /home/carruda/projects/rpa_challenge/artifacts/challenge.xlsx
+2026-07-28 10:21:47,568 [INFO] src.data_loader: Iniciando parsing da planilha '/home/carruda/projects/rpa_challenge/artifacts/challenge.xlsx'.
+2026-07-28 10:21:47,652 [INFO] src.data_loader: Parsing concluído: 10 registros extraídos de '/home/carruda/projects/rpa_challenge/artifacts/challenge.xlsx'.
+2026-07-28 10:21:47,652 [INFO] src.runner: Iniciando execução do desafio com 10 registros.
+2026-07-28 10:21:47,652 [INFO] src.challenge_page: Iniciando o desafio (clique em 'Start').
+2026-07-28 10:21:48,282 [INFO] src.runner: Round 1/10 preenchido e submetido.
+2026-07-28 10:21:48,757 [INFO] src.runner: Round 2/10 preenchido e submetido.
+2026-07-28 10:21:49,235 [INFO] src.runner: Round 3/10 preenchido e submetido.
+2026-07-28 10:21:49,715 [INFO] src.runner: Round 4/10 preenchido e submetido.
+2026-07-28 10:21:50,188 [INFO] src.runner: Round 5/10 preenchido e submetido.
+2026-07-28 10:21:50,663 [INFO] src.runner: Round 6/10 preenchido e submetido.
+2026-07-28 10:21:51,125 [INFO] src.runner: Round 7/10 preenchido e submetido.
+2026-07-28 10:21:51,602 [INFO] src.runner: Round 8/10 preenchido e submetido.
+2026-07-28 10:21:52,078 [INFO] src.runner: Round 9/10 preenchido e submetido.
+2026-07-28 10:21:52,571 [INFO] src.runner: Round 10/10 preenchido e submetido.
+2026-07-28 10:21:52,616 [INFO] src.challenge_page: Mensagem de conclusão do desafio capturada: Congratulations!
+Your success rate is 100% ( 70 out of 70 fields) in 4835 milliseconds
+2026-07-28 10:21:52,616 [INFO] src.runner: Desafio concluído em 4.96s (10/10 registros). Mensagem do site: Congratulations!
+Your success rate is 100% ( 70 out of 70 fields) in 4835 milliseconds
+2026-07-28 10:21:52,617 [INFO] __main__: Execução concluída: 10 registros preenchidos em 4.96s. Mensagem do site: Congratulations!
+Your success rate is 100% ( 70 out of 70 fields) in 4835 milliseconds
+2026-07-28 10:21:52,763 [INFO] src.reporting: Screenshot da tela final salvo em '/home/carruda/projects/rpa_challenge/artifacts/final_screenshot.png'.
+2026-07-28 10:21:52,763 [INFO] src.reporting: Relatório de resultado salvo em '/home/carruda/projects/rpa_challenge/artifacts/result.json'.
+2026-07-28 10:21:52,763 [INFO] __main__: Artefatos de evidência gerados em 'artifacts/': {'status': 'success', 'records_filled': 10, 'accuracy_pct': 100.0, 'execution_time_seconds': 4.96, 'site_reported_time': 4.835, 'timestamp': '2026-07-28T13:21:52.763516+00:00', 'headless': True}

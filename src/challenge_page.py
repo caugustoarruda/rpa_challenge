@@ -106,8 +106,10 @@ SUBMIT_BUTTON_CSS = "input[type='submit']"
 # atributo estável dedicado (ex. `ng-reflect-name`); por isso o critério
 # aqui é textual: localiza o elemento mais interno (sem descendentes que
 # repitam o mesmo texto) cujo conteúdo contenha "Congratulations" — a
-# mensagem de sucesso do site. Essa estratégia é mais resiliente a mudanças
-# de classe/estrutura do que fixar um seletor CSS específico do modal.
+# mensagem de sucesso do site. Deliberadamente exige só essa palavra (não a
+# linha de "success rate"/tempo, que é nice-to-have): a detecção de
+# conclusão é crítica para RF08 e não pode falhar caso o site mude a
+# redação da linha de tempo/taxa de sucesso.
 COMPLETION_MESSAGE_XPATH = (
     "//*[contains(normalize-space(.), 'Congratulations') "
     "and not(.//*[contains(normalize-space(.), 'Congratulations')])]"
@@ -216,6 +218,18 @@ class ChallengePage:
             EC.visibility_of_element_located((By.XPATH, COMPLETION_MESSAGE_XPATH))
         )
         message = completion_element.text.strip()
+
+        # Tentativa best-effort de enriquecer a mensagem com a linha irmã de
+        # "success rate"/tempo (usada por `reporting.extract_site_reported_time`).
+        # Nunca deve impedir a conclusão do desafio: se o container pai não
+        # existir ou não acrescentar texto, mantém apenas "Congratulations".
+        try:
+            parent_text = completion_element.find_element(By.XPATH, "..").text.strip()
+            if len(parent_text) > len(message):
+                message = parent_text
+        except NoSuchElementException:
+            pass
+
         logger.info("Mensagem de conclusão do desafio capturada: %s", message)
         return message
 

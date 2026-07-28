@@ -144,39 +144,39 @@ mesmo quando a posição visual do campo muda a cada round. A automação deve:
 
 ## 8. Critérios de Aceite
 
-- [ ] Desafio concluído com **100% de acurácia** (10/10 registros corretos), confirmado pela
+- [X] Desafio concluído com **100% de acurácia** (10/10 registros corretos), confirmado pela
       mensagem de sucesso do próprio site.
-- [ ] Execução bem-sucedida mesmo com a **reordenação visual dos campos** entre rounds (validado
+- [X] Execução bem-sucedida mesmo com a **reordenação visual dos campos** entre rounds (validado
       rodando múltiplas vezes, já que a ordem muda a cada execução).
-- [ ] **Zero preenchimento manual** — execução ponta a ponta via um único comando.
-- [ ] **Nenhuma manipulação de DOM** para simular sucesso (sem `execute_script` para setar valores
+- [X] **Zero preenchimento manual** — execução ponta a ponta via um único comando.
+- [X] **Nenhuma manipulação de DOM** para simular sucesso (sem `execute_script` para setar valores
       ou disparar eventos de forma artificial).
-- [ ] **Nenhuma gravação frágil de passos** (sem Selenium IDE / record-playback; toda lógica é
+- [X] **Nenhuma gravação frágil de passos** (sem Selenium IDE / record-playback; toda lógica é
       código versionado e legível).
-- [ ] Funciona em modo headless e non-headless via flag de CLI.
-- [ ] Artefatos (`result.json`, screenshot, log) gerados corretamente em `artifacts/` a cada execução.
-- [ ] Setup reprodutível em máquina limpa com `pip install -r requirements.txt` + 1 comando.
+- [X] Funciona em modo headless e non-headless via flag de CLI.
+- [X] Artefatos (`result.json`, screenshot, log) gerados corretamente em `artifacts/` a cada execução.
+- [X] Setup reprodutível em máquina limpa com `pip install -r requirements.txt` + 1 comando.
 
 ## 8.1. Checklist de Entrega
 
 Itens exigidos para que o avaliador consiga executar, validar e entender a solução sem
 ambiguidade — apenas o necessário, sem escopo adicional:
 
-- [ ] **README** com: instalação, comando(s) de execução (headless e non-headless), decisões
+- [X] **README** com: instalação, comando(s) de execução (headless e non-headless), decisões
       técnicas relevantes (ex. estratégia de identificação de campos, escolha de espera explícita),
       limitações conhecidas, e uso de IA no desenvolvimento (se houver, descrever brevemente onde
       foi usada — ex. geração inicial deste PRD/estrutura).
-- [ ] **Código Python organizado** — estrutura modular descrita na Seção 6 (`src/`), sem lógica de
+- [X] **Código Python organizado** — estrutura modular descrita na Seção 6 (`src/`), sem lógica de
       um único desafio (RPA Challenge) misturada com scripts soltos.
-- [ ] **Arquivo de dependências**: `requirements.txt` com versões fixadas o suficiente para
+- [X] **Arquivo de dependências**: `requirements.txt` com versões fixadas o suficiente para
       reprodutibilidade.
-- [ ] **Testes automatizados relevantes**: cobertura do mapeamento crítico coluna→campo e da
+- [X] **Testes automatizados relevantes**: cobertura do mapeamento crítico coluna→campo e da
       idempotência da execução (ver Seção 5.1) — não é necessário testar a UI do site em si via
       mocks, já que a validação real é a execução ponta a ponta.
-- [ ] **Evidências de execução**: `result.json`, `final_screenshot.png` e `run.log` gerados em
+- [X] **Evidências de execução**: `result.json`, `final_screenshot.png` e `run.log` gerados em
       `artifacts/` (Seção 7), suficientes para o avaliador confirmar o resultado sem precisar
       rodar novamente.
-- [ ] **Nenhum dado sensível versionado**: sem credenciais, tokens, cookies, `.env` com segredos ou
+- [X] **Nenhum dado sensível versionado**: sem credenciais, tokens, cookies, `.env` com segredos ou
       arquivos grandes desnecessários (ex. binário do navegador, planilha baixada não é obrigatória
       versionar). A solução usa exclusivamente dados públicos do próprio site do desafio.
 
@@ -214,8 +214,8 @@ checkbox correspondente para sabermos em que parte do fluxo estamos.
 - [X] Sprint 3 — Orquestração do loop completo
 - [X] Sprint 4 — Logging e tratamento de falhas
 - [X] Sprint 5 — Artefatos e relatório de resultado
-- [ ] Sprint 6 — Testes, headless/non-headless e validação de robustez
-- [ ] Sprint 7 — Documentação e entrega
+- [X] Sprint 6 — Testes, headless/non-headless e validação de robustez
+- [X] Sprint 7 — Documentação e entrega
 
 ### Sprint 0 — Setup do projeto (0,5 dia) — [X] Concluída
 **Objetivo:** base do repositório pronta para desenvolvimento.
@@ -282,28 +282,40 @@ processo termina com status de falha, sem travar silenciosamente.
 **DoD:** após uma execução, `artifacts/` contém `result.json` válido, `final_screenshot.png` e
 `run.log`, todos consistentes entre si.
 
-### Sprint 6 — Testes, headless/non-headless e validação de robustez (0,5–1 dia) — [ ] Concluída
+### Sprint 6 — Testes, headless/non-headless e validação de robustez (0,5–1 dia) — [X] Concluída
 **Objetivo:** validar os critérios de aceite de ponta a ponta.
-- Testes unitários (`pytest`) descritos na Seção 5.1: `data_loader`, **mapeamento crítico**
-  coluna→campo, `reporting` e **idempotência** de artefatos/download.
-- Execução completa em modo headless e non-headless — comparar resultados.
-- Rodar a automação múltiplas vezes (mínimo 3–5x) para confirmar 100% de acurácia consistente mesmo
-  com reordenação diferente a cada run.
-- Revisão de código: garantir ausência de `execute_script` para forçar estado, ausência de
+- [X] Testes unitários (`pytest`) descritos na Seção 5.1: `data_loader`, **mapeamento crítico**
+  coluna→campo, `reporting` e **idempotência** de artefatos/download. (58 testes, 100% passando)
+- [X] Execução completa em modo headless e non-headless — comparar resultados.
+- [X] Rodar a automação múltiplas vezes (mínimo 3–5x) para confirmar 100% de acurácia consistente mesmo
+  com reordenação diferente a cada run. (7+ execuções reais contra rpachallenge.com, 100% em todas)
+- [X] Revisão de código: garantir ausência de `execute_script` para forçar estado, ausência de
   `time.sleep` como mecanismo primário de sincronização, e ausência de credenciais/dados sensíveis
   versionados.
+
+**Achados corrigidos durante a validação contra o site real:**
+- Bug bloqueante: cabeçalho `"Last Name "` (espaço à direita) na planilha real não era
+  normalizado antes da validação de colunas em `data_loader.load_records_from_excel`,
+  fazendo toda execução real falhar. Corrigido com `.str.strip()` nos nomes de coluna.
+- Bug secundário: `site_reported_time` sempre ficava `null` porque o site reporta o tempo em
+  milissegundos (não segundos) e a mensagem de conclusão capturada não incluía a linha de
+  taxa de sucesso/tempo. Corrigido em `reporting.SITE_TIME_PATTERN`/`extract_site_reported_time`
+  (suporte a milissegundos) e em `challenge_page.wait_for_completion_message` (enriquecimento
+  best-effort do texto, sem acoplar a detecção crítica de conclusão a essa frase).
+- Ambiente de execução (WSL) sem libs de sistema do Chrome (`libnss3`/`libnspr4`) documentado
+  como pré-requisito a esclarecer no README (Sprint 7).
 
 **DoD:** todos os itens da seção "Critérios de Aceite" e do "Checklist de Entrega" (Seção 8.1)
 verificados e marcados; `pytest` passa localmente sem depender do site real.
 
-### Sprint 7 — Documentação e entrega (0,5 dia) — [ ] Concluída
+### Sprint 7 — Documentação e entrega (0,5 dia) — [X] Concluída
 **Objetivo:** preparar o pacote final para avaliação.
-- `README.md` final: pré-requisitos, instalação, comandos de execução (headless/non-headless),
+- [X] `README.md` final: pré-requisitos, instalação, comandos de execução (headless/non-headless),
   descrição dos artefatos gerados, decisões técnicas relevantes, limitações conhecidas e uso de IA
   no desenvolvimento (se houver).
-- Revisão de estrutura do repositório (remoção de arquivos temporários, `.gitignore` correto,
+- [X] Revisão de estrutura do repositório (remoção de arquivos temporários, `.gitignore` correto,
   confirmação de que nenhum dado sensível ou arquivo grande desnecessário foi versionado).
-- Commit final com histórico limpo.
+- [X] Commit final com histórico limpo.
 
 **DoD:** um avaliador consegue clonar o repositório em máquina limpa, seguir o README e obter
 100% de acurácia sem qualquer ajuste manual; checklist da Seção 8.1 100% concluído.

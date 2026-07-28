@@ -234,6 +234,11 @@ def load_records_from_excel(file_path: str) -> list[dict[str, str]]:
             "O arquivo pode estar corrompido ou em formato inesperado."
         ) from exc
 
+    # A planilha real do desafio expõe ao menos uma coluna com espaço à
+    # direita no cabeçalho (ex. "Last Name "). Normaliza antes de validar
+    # para não depender de um detalhe de formatação do site (RNF01/RNF05).
+    dataframe.columns = dataframe.columns.str.strip()
+
     missing_columns = [col for col in EXPECTED_COLUMNS if col not in dataframe.columns]
     if missing_columns:
         logger.error(

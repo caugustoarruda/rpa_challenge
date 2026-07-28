@@ -45,11 +45,12 @@ SCREENSHOT_FILENAME = "final_screenshot.png"
 RESULT_FILENAME = "result.json"
 
 # Regex tolerante para extrair o tempo reportado pelo próprio site a partir
-# do texto do popup de conclusão (ex. "... in 24 seconds ..."). Deliberadamente
-# permissiva quanto ao texto ao redor do número: essa extração é tratada pelo
-# PRD (Sprint 5) como "nice to have" — se o formato da mensagem mudar,
+# do texto do popup de conclusão (ex. "... in 24 seconds ..." ou, como o site
+# real reporta, "... in 4751 milliseconds ..."). Deliberadamente permissiva
+# quanto ao texto ao redor do número: essa extração é tratada pelo PRD
+# (Sprint 5) como "nice to have" — se o formato da mensagem mudar,
 # `extract_site_reported_time` deve retornar `None` em vez de lançar exceção.
-SITE_TIME_PATTERN = re.compile(r"(\d+(?:\.\d+)?)\s*second", re.IGNORECASE)
+SITE_TIME_PATTERN = re.compile(r"(\d+(?:\.\d+)?)\s*(millisecond|second)s?", re.IGNORECASE)
 
 
 def calculate_accuracy(records_filled: int, total_records: int = TOTAL_RECORDS) -> float:
@@ -87,8 +88,9 @@ def extract_site_reported_time(completion_message: str) -> float | None:
             `ChallengePage.wait_for_completion_message`.
 
     Returns:
-        Tempo em segundos reportado pelo site, ou `None` se não for possível
-        extrair um número da mensagem.
+        Tempo em segundos reportado pelo site (convertido a partir de
+        milissegundos quando for essa a unidade usada na mensagem), ou
+        `None` se não for possível extrair um número da mensagem.
     """
     if not completion_message:
         return None
@@ -98,9 +100,13 @@ def extract_site_reported_time(completion_message: str) -> float | None:
         return None
 
     try:
-        return float(match.group(1))
+        value = float(match.group(1))
     except ValueError:
         return None
+
+    if match.group(2).lower() == "millisecond":
+        return round(value / 1000, 3)
+    return value
 
 
 def save_screenshot(driver: WebDriver, output_dir: str) -> str:

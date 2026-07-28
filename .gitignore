@@ -22,9 +22,16 @@ htmlcov/
 *.swp
 .DS_Store
 
-# Project artifacts (runtime output, never versioned)
+# Project artifacts: as evidências de execução (result.json,
+# final_screenshot.png, run.log) SÃO versionadas propositalmente (PRD Seção
+# 8.1: o avaliador deve conseguir confirmar o resultado sem rodar
+# novamente). Apenas a planilha baixada (dado do site, não é obrigatório
+# versionar) e qualquer outro arquivo de runtime não previsto ficam de fora.
 artifacts/*
 !artifacts/.gitkeep
+!artifacts/result.json
+!artifacts/final_screenshot.png
+!artifacts/run.log
 
 # Downloaded challenge spreadsheet / local downloads
 *.xlsx
