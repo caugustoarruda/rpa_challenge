@@ -13,6 +13,7 @@ com medição de tempo total e retry controlado por round para
 
 from __future__ import annotations
 
+import logging
 import time
 from dataclasses import dataclass
 
@@ -21,6 +22,8 @@ from selenium.webdriver.remote.webdriver import WebDriver
 
 from src.challenge_page import ChallengePage
 from src.data_loader import download_challenge_excel, load_records_from_excel
+
+logger = logging.getLogger(__name__)
 
 # Número máximo de tentativas de (fill_record + submit) por round em caso de
 # StaleElementReferenceException (PRD Seção 9: risco de o clique em "Submit"
@@ -99,16 +102,28 @@ def run_challenge(
     """
     page = ChallengePage(driver, timeout=timeout)
 
+    total_records = len(records)
+    logger.info("Iniciando execução do desafio com %d registros.", total_records)
+
     start_time = time.monotonic()
     page.start()
 
     records_filled = 0
-    for record in records:
-        _fill_and_submit_with_retry(page, record)
+    for round_number, record in enumerate(records, start=1):
+        _fill_and_submit_with_retry(page, record, round_number)
         records_filled += 1
+        logger.info("Round %d/%d preenchido e submetido.", round_number, total_records)
 
     completion_message = page.wait_for_completion_message()
     execution_time_seconds = time.monotonic() - start_time
+
+    logger.info(
+        "Desafio concluído em %.2fs (%d/%d registros). Mensagem do site: %s",
+        execution_time_seconds,
+        records_filled,
+        total_records,
+        completion_message,
+    )
 
     return RunResult(
         status="success",
@@ -140,12 +155,15 @@ def run(
     Returns:
         `RunResult` (ver `run_challenge`) com os dados da execução.
     """
+    logger.info("Iniciando execução completa (download -> parsing -> preenchimento).")
     excel_path = download_challenge_excel(driver, download_dir, timeout=timeout)
     records = load_records_from_excel(excel_path)
     return run_challenge(driver, records, timeout=timeout)
 
 
-def _fill_and_submit_with_retry(page: ChallengePage, record: dict[str, str]) -> None:
+def _fill_and_submit_with_retry(
+    page: ChallengePage, record: dict[str, str], round_number: int
+) -> None:
     """Preenche e submete um round, com retry controlado por round.
 
     Reexecuta `fill_record` + `submit` do zero (nunca reaproveitando um
@@ -154,19 +172,41 @@ def _fill_and_submit_with_retry(page: ChallengePage, record: dict[str, str]) -> 
     "Submit" coincidir com o re-render do Angular entre uma chamada e outra
     dentro do mesmo round.
 
+    Args:
+        page: Page Object já posicionado no formulário do desafio.
+        record: registro (round atual) a preencher e submeter.
+        round_number: número do round (1-indexado), usado apenas para
+            contexto nas mensagens de log (WARNING por tentativa, ERROR se
+            esgotar as tentativas).
+
     Raises:
         StaleElementReferenceException: se o erro persistir após
             `MAX_ATTEMPTS_PER_ROUND` tentativas.
     """
     last_error: StaleElementReferenceException | None = None
 
-    for _attempt in range(1, MAX_ATTEMPTS_PER_ROUND + 1):
+    for attempt in range(1, MAX_ATTEMPTS_PER_ROUND + 1):
         try:
             page.fill_record(record)
             page.submit()
             return
         except StaleElementReferenceException as exc:
             last_error = exc
+            logger.warning(
+                "Round %d: StaleElementReferenceException na tentativa %d/%d "
+                "(re-render do Angular coincidiu com a interação); "
+                "tentando novamente.",
+                round_number,
+                attempt,
+                MAX_ATTEMPTS_PER_ROUND,
+            )
 
     assert last_error is not None
+    logger.error(
+        "Round %d: falha definitiva após %d tentativas por "
+        "StaleElementReferenceException. Considere aumentar o timeout ou "
+        "MAX_ATTEMPTS_PER_ROUND se o site estiver mais lento que o usual.",
+        round_number,
+        MAX_ATTEMPTS_PER_ROUND,
+    )
     raise last_error

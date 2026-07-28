@@ -26,6 +26,7 @@ Contrato de dados (consumido por `challenge_page.fill_record(record)`):
 from __future__ import annotations
 
 import glob
+import logging
 import os
 import time
 
@@ -35,6 +36,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
+
+logger = logging.getLogger(__name__)
 
 # Colunas obrigatórias, na ordem em que aparecem na planilha oficial do
 # desafio. Usadas tanto para validar o parsing quanto para documentar o
@@ -97,13 +100,23 @@ def download_challenge_excel(
     os.makedirs(download_dir, exist_ok=True)
     _clear_previous_downloads(download_dir)
 
+    logger.info("Iniciando download da planilha do desafio em %s.", CHALLENGE_URL)
     driver.get(CHALLENGE_URL)
 
-    download_button = WebDriverWait(driver, timeout).until(
-        EC.element_to_be_clickable(
-            (By.XPATH, "//*[self::a or self::button][contains(., 'Download')]")
+    try:
+        download_button = WebDriverWait(driver, timeout).until(
+            EC.element_to_be_clickable(
+                (By.XPATH, "//*[self::a or self::button][contains(., 'Download')]")
+            )
         )
-    )
+    except TimeoutException:
+        logger.error(
+            "Botão de download não ficou clicável em %ss em %s. Verifique se o "
+            "site está no ar ou se o texto/tag do botão mudou.",
+            timeout,
+            CHALLENGE_URL,
+        )
+        raise
     download_button.click()
 
     downloaded_path = _wait_for_download(download_dir, timeout=timeout)
@@ -114,6 +127,7 @@ def download_challenge_excel(
             os.remove(final_path)
         os.rename(downloaded_path, final_path)
 
+    logger.info("Download da planilha concluído: %s", final_path)
     return final_path
 
 
@@ -160,6 +174,12 @@ def _wait_for_download(
 
         time.sleep(poll_interval)
 
+    logger.error(
+        "Download não concluído em %ss no diretório '%s'. Verifique conexão de "
+        "rede ou se o Chrome bloqueou o download (permissões/prefs).",
+        timeout,
+        download_dir,
+    )
     raise TimeoutException(
         f"Download não concluído em {timeout}s (diretório: {download_dir})"
     )
@@ -182,7 +202,14 @@ def load_records_from_excel(file_path: str) -> list[dict[str, str]]:
             válido (corrompido/formato inesperado), ou se estiver faltando
             alguma das colunas esperadas.
     """
+    logger.info("Iniciando parsing da planilha '%s'.", file_path)
+
     if not os.path.isfile(file_path):
+        logger.error(
+            "Planilha do desafio não encontrada em '%s'. O download pode não "
+            "ter sido concluído ou o caminho está incorreto.",
+            file_path,
+        )
         raise FileNotFoundError(
             f"Planilha do desafio não encontrada em '{file_path}'. "
             "Verifique se o download foi concluído antes de tentar ler os "
@@ -196,6 +223,12 @@ def load_records_from_excel(file_path: str) -> list[dict[str, str]]:
         # acurácia do preenchimento (RF03/RNF05).
         dataframe = pd.read_excel(file_path, engine="openpyxl", dtype=str)
     except Exception as exc:
+        logger.error(
+            "Falha ao ler '%s' como planilha Excel válida (arquivo "
+            "corrompido ou em formato inesperado): %s",
+            file_path,
+            exc,
+        )
         raise ValueError(
             f"Não foi possível ler '{file_path}' como planilha Excel válida. "
             "O arquivo pode estar corrompido ou em formato inesperado."
@@ -203,6 +236,13 @@ def load_records_from_excel(file_path: str) -> list[dict[str, str]]:
 
     missing_columns = [col for col in EXPECTED_COLUMNS if col not in dataframe.columns]
     if missing_columns:
+        logger.error(
+            "Planilha '%s' não contém as colunas esperadas: %s. Colunas "
+            "encontradas: %s.",
+            file_path,
+            missing_columns,
+            list(dataframe.columns),
+        )
         raise ValueError(
             f"Planilha '{file_path}' não contém as colunas esperadas: "
             f"{missing_columns}. Colunas encontradas: {list(dataframe.columns)}."
@@ -211,4 +251,5 @@ def load_records_from_excel(file_path: str) -> list[dict[str, str]]:
     dataframe = dataframe[EXPECTED_COLUMNS].fillna("")
 
     records = dataframe.astype(str).to_dict(orient="records")
+    logger.info("Parsing concluído: %d registros extraídos de '%s'.", len(records), file_path)
     return records

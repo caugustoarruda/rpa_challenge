@@ -36,6 +36,8 @@ reordenação, mas ainda assim são localizados por atributo/texto, nunca por
 
 from __future__ import annotations
 
+import logging
+
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
@@ -44,6 +46,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
 from src.data_loader import EXPECTED_COLUMNS
+
+logger = logging.getLogger(__name__)
 
 # Mapa único coluna da planilha -> seletores do campo correspondente.
 # Fonte única da verdade (RF05/Seção 6 do PRD): nenhuma outra estrutura
@@ -132,6 +136,7 @@ class ChallengePage:
         clicável quanto para confirmar que ao menos um campo do formulário
         já está presente no DOM antes de devolver o controle ao chamador.
         """
+        logger.info("Iniciando o desafio (clique em 'Start').")
         wait = WebDriverWait(self.driver, self.timeout)
 
         start_button = wait.until(EC.element_to_be_clickable((By.XPATH, START_BUTTON_XPATH)))
@@ -174,12 +179,16 @@ class ChallengePage:
             input_element = self._locate_input(column)
             input_element.clear()
             input_element.send_keys(value)
+            # DEBUG (não INFO) para não gerar 7 linhas de log por round — o
+            # round completo já é logado em INFO por `runner.py`.
+            logger.debug("Campo '%s' preenchido com valor '%s'.", column, value)
 
     def submit(self) -> None:
         """Clica em "Submit", re-localizando o botão a partir do DOM atual."""
         wait = WebDriverWait(self.driver, self.timeout)
         submit_button = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, SUBMIT_BUTTON_CSS)))
         submit_button.click()
+        logger.debug("Formulário submetido (clique em 'Submit').")
 
     def wait_for_completion_message(self, timeout: int | None = None) -> str:
         """Aguarda o popup de conclusão do desafio e retorna seu texto.
@@ -206,7 +215,9 @@ class ChallengePage:
         completion_element = wait.until(
             EC.visibility_of_element_located((By.XPATH, COMPLETION_MESSAGE_XPATH))
         )
-        return completion_element.text.strip()
+        message = completion_element.text.strip()
+        logger.info("Mensagem de conclusão do desafio capturada: %s", message)
+        return message
 
     def _locate_input(self, column: str) -> WebElement:
         """Localiza o `<input>` de `column` pelo seletor primário, com fallback.
@@ -225,13 +236,30 @@ class ChallengePage:
                 EC.element_to_be_clickable((By.CSS_SELECTOR, selectors["css"]))
             )
         except TimeoutException:
-            pass
+            # Seletor primário (ng-reflect-name) não respondeu — usar o
+            # fallback é sinal de possível mudança no site (Seção 9 do PRD),
+            # por isso WARNING e não DEBUG.
+            logger.warning(
+                "Campo '%s': seletor primário ('%s') não respondeu em %ss; "
+                "usando fallback por texto do label.",
+                column,
+                selectors["css"],
+                self.timeout,
+            )
 
         try:
             return wait.until(
                 EC.element_to_be_clickable((By.XPATH, selectors["xpath_fallback"]))
             )
         except TimeoutException as exc:
+            logger.error(
+                "Campo '%s' não encontrado nem pelo seletor primário ('%s') "
+                "nem pelo fallback ('%s'). Verifique se o layout do "
+                "formulário do site mudou.",
+                column,
+                selectors["css"],
+                selectors["xpath_fallback"],
+            )
             raise NoSuchElementException(
                 f"Campo '{column}' não encontrado nem pelo seletor primário "
                 f"('{selectors['css']}') nem pelo fallback "

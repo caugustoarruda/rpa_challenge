@@ -212,7 +212,7 @@ checkbox correspondente para sabermos em que parte do fluxo estamos.
 - [X] Sprint 1 — Aquisição de dados
 - [X] Sprint 2 — Motor de identificação e preenchimento de campos
 - [X] Sprint 3 — Orquestração do loop completo
-- [ ] Sprint 4 — Logging e tratamento de falhas
+- [X] Sprint 4 — Logging e tratamento de falhas
 - [ ] Sprint 5 — Artefatos e relatório de resultado
 - [ ] Sprint 6 — Testes, headless/non-headless e validação de robustez
 - [ ] Sprint 7 — Documentação e entrega
@@ -260,13 +260,13 @@ mesmo alternando a ordem visual entre execuções.
 **DoD:** execução ponta a ponta (download → preenchimento → submissão dos 10 registros) termina com
 a mensagem de sucesso do site, sem intervenção manual.
 
-### Sprint 4 — Logging e tratamento de falhas (0,5 dia) — [ ] Concluída
+### Sprint 4 — Logging e tratamento de falhas (0,5 dia) — [X] Concluída
 **Objetivo:** tornar a execução auditável e resiliente.
-- `logging_config.py`: logger configurado com níveis e formato consistente, saída para arquivo em
+- [X] `logging_config.py`: logger configurado com níveis e formato consistente, saída para arquivo em
   `artifacts/run.log`.
-- Logs em pontos-chave: início, download concluído, cada round preenchido, submissão, conclusão,
+- [X] Logs em pontos-chave: início, download concluído, cada round preenchido, submissão, conclusão,
   erros.
-- Tratamento explícito de exceções esperadas (timeout, elemento não encontrado, download falho) com
+- [X] Tratamento explícito de exceções esperadas (timeout, elemento não encontrado, download falho) com
   mensagens acionáveis; falha real deve abortar com código de saída não-zero.
 
 **DoD:** ao forçar um erro (ex. seletor inválido temporário), o log aponta claramente a causa e o
